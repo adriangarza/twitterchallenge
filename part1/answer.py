@@ -28,11 +28,23 @@ given a list of expression trees and sequence in the format
 
         for reversing, reverse the entire string and then swap parentheses
 """
-
 def simplify(str):
-
+    print "Adsd"
 def reverse(str):
+    print "ASdasd"
 
 test1 = "(AB) C((DE)F) /SRS"
 
+while True:
+    #grab the expression tree and operations, format correctly
+    inputString =raw_input().replace(" ", "")
+    #split the string into its components
+    expressionTree = inputString.split("/")[0]
+    operations = list(inputString.split("/")[1])
 
+    #optimize operations: remove sequential S operations
+    for idx, val in enumerate(operations):
+        if val == "S":
+            while operations[idx+1] == "S":
+                del operations[idx+1]
+    print operations
