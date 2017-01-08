@@ -29,4 +29,10 @@ given a list of expression trees and sequence in the format
         for reversing, reverse the entire string and then swap parentheses
 """
 
+def simplify(str):
+
+def reverse(str):
+
+test1 = "(AB) C((DE)F) /SRS"
+
 
