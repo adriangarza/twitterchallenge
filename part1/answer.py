@@ -3,7 +3,7 @@ given a list of expression trees and sequence in the format
     "<expression tree> / <sequence of operations>"
     EXPRESSION TREE
         non-empty, A-Z variables
-        derivatve chain: E -> E \ (E)
+        derivatve chain: E -> E | (E)
     OPERATIONS
         R: reverse, but keep parentheses intact
         S: simplify, look at the FIRST element and remove:
@@ -26,40 +26,61 @@ given a list of expression trees and sequence in the format
         concatenate Ss between Rs
         between every S, look forwards to the next S and do the odd/even R treatment
 
-        for reversing, reverse the entire string and then swap parentheses
+        for reversing, reverse the entire inputString and then swap parentheses
 """
-def simplify(str):
+def simplify(inputString):
     #find the first non-parentheses character after counting opening/closing parentheses
     #then remove closing parentheses until balance is restored
     openP = 0
-    closeP = 0
     startIdx = 0
-    for idx, val in enumerate(str):
+    for idx, val in enumerate(inputString):
         if val == "(":
-            openP++
+            openP += 1
         elif val == ")":
-            closeP++
+            openP -= 1
         else:
             startIdx = idx
             break
-
-    remainingParens = openP - closeP
     
-    return str
+    outStr = ""     #the new, simplified inputStringing
+    endIdx = 0      #the end of the first simplification
 
-def reverse(str):
-    str = str.strip()
-    #swap parentheses using the intermediary character '!', then reverse
-    return str.replace("(", "!").replace(")", "(").replace("!", ")")[::-1]
+    for i in range(startIdx, len(inputString)):
+        #break from the loop if all parentheses are closed
+        if openP <= 0:
+            endIdx = i 
+            break
 
-test1 = "(AB)C((DE)F)/SRRRSSRRSSS"
+        #if it's a character, add to the new inputStringing
+        if inputString[i] not in ["(", ")"]:
+            outStr += inputString[i]
+        #else, keep track of open parentheses accordingly
+        elif inputString[i] == '(':
+            openP += 1
+        elif inputString[i] == ')':
+            openP -= 1
+    
+    #now append everything else
+    outStr += inputString[endIdx::]
+
+    return outStr
+
+def reverse(inputString):
+    #swap parentheses using the intermediary character ' ', then reverse
+    return inputString.replace("(", " ").replace(")", "(").replace(" ", ")")[::-1]
+
+test1 = "A(BC)/RSR"
 
 while True:
     #grab the expression tree and operations, format correctly
-    inputString =raw_input().replace(" ", "")
+    try:
+        inputString =raw_input().replace(" ", "")
+    except (EOFError):
+        break
+
     if inputString == "test":
         inputString = test1
-    #split the string into its components
+    #split the inputStringing into its components
     expressionTree = inputString.split("/")[0]
     operations = list(inputString.split("/")[1])
 
@@ -74,20 +95,37 @@ while True:
                 del operations[idx]
                 del operations[idx]
 
-    print operations
-    print expressionTree
-    print reverse(expressionTree)
-
     #now iterate through the operations with some optimization:
     #if both ends have been simplified, just check if they are an even
     #or odd number of reversals left and do zero or one of those
-    simplifiedCount = 0
-    reversed = False
-    for op in operations:
-        if op == "R":
-            expressionTree = reverse(expressionTree)
-            if not reversed:
-                reversed = True
-        elif op == "S"
-            expressionTree = simplify(expressionTree)
+    simplifiedFront = False
+    simplifiedBack = False
+    treeReversed = False
+    for idx, op in enumerate(operations):
+        #if both ends are simplified, just reverse and return
+        if simplifiedFront and simplifiedBack:
+            numRs = 0
+            for j in range(idx, len(operations)):
+                if operations[j] == "R":
+                    numRs += 1
+            #if there are an odd number of times left to reverse, just do it once
+            if numRs % 2 != 0:
+                operations = reverse(operations)
+                break
+            else:
+                break
 
+        elif op == "R":
+            expressionTree = reverse(expressionTree)
+            treeReversed = not treeReversed
+        elif op == "S":
+            #only need to simplify both sides once
+            if not treeReversed and not simplifiedFront:
+                expressionTree = simplify(expressionTree)
+                simplifiedFront = True
+            elif treeReversed and not simplifiedBack:
+                expressionTree = simplify(expressionTree)
+                simplifiedBack = True
+
+    #the operations are finished, so print the inputStringing
+    print expressionTree
