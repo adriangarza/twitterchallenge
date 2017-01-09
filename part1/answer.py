@@ -66,8 +66,18 @@ def simplify(inputString):
     return outStr
 
 def reverse(inputString):
-    #swap parentheses using the intermediary character ' ', then reverse
-    return inputString.replace("(", " ").replace(")", "(").replace(" ", ")")[::-1]
+    if inputString == "" or not inputString:
+        return ""
+    #reverse, then swap parentheses
+    outString = ""
+    for char in inputString[::-1]:
+        if char == '(':
+            outString += ')'
+        elif char == ')':
+            outString += '('
+        else:
+            outString += char
+    return outString
 
 test1 = "A(BC)/RSR"
 
@@ -80,7 +90,9 @@ while True:
 
     if inputString == "test":
         inputString = test1
-    #split the inputStringing into its components
+    elif inputString == "exit":
+        break
+    #split the inputString into its components
     expressionTree = inputString.split("/")[0]
     operations = list(inputString.split("/")[1])
 
