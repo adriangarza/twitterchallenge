@@ -33,11 +33,13 @@ def simplify(str):
 def reverse(str):
     print "ASdasd"
 
-test1 = "(AB) C((DE)F) /SRS"
+test1 = "(AB) C((DE)F) /SRRRSSRRSSS"
 
 while True:
     #grab the expression tree and operations, format correctly
     inputString =raw_input().replace(" ", "")
+    if inputString == "test":
+        inputString = test1
     #split the string into its components
     expressionTree = inputString.split("/")[0]
     operations = list(inputString.split("/")[1])
@@ -45,6 +47,12 @@ while True:
     #optimize operations: remove sequential S operations
     for idx, val in enumerate(operations):
         if val == "S":
-            while operations[idx+1] == "S":
+            while idx+1 < len(operations) and operations[idx+1] == "S":
                 del operations[idx+1]
+        #optimize reversals: remove them in pairs
+        if val == "R":
+            if idx+1 < len(operations) and operations[idx+1] == "R":
+                del operations[idx]
+                del operations[idx]
+
     print operations
