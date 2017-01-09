@@ -29,11 +29,30 @@ given a list of expression trees and sequence in the format
         for reversing, reverse the entire string and then swap parentheses
 """
 def simplify(str):
-    print "Adsd"
-def reverse(str):
-    print "ASdasd"
+    #find the first non-parentheses character after counting opening/closing parentheses
+    #then remove closing parentheses until balance is restored
+    openP = 0
+    closeP = 0
+    startIdx = 0
+    for idx, val in enumerate(str):
+        if val == "(":
+            openP++
+        elif val == ")":
+            closeP++
+        else:
+            startIdx = idx
+            break
 
-test1 = "(AB) C((DE)F) /SRRRSSRRSSS"
+    remainingParens = openP - closeP
+    
+    return str
+
+def reverse(str):
+    str = str.strip()
+    #swap parentheses using the intermediary character '!', then reverse
+    return str.replace("(", "!").replace(")", "(").replace("!", ")")[::-1]
+
+test1 = "(AB)C((DE)F)/SRRRSSRRSSS"
 
 while True:
     #grab the expression tree and operations, format correctly
@@ -56,3 +75,19 @@ while True:
                 del operations[idx]
 
     print operations
+    print expressionTree
+    print reverse(expressionTree)
+
+    #now iterate through the operations with some optimization:
+    #if both ends have been simplified, just check if they are an even
+    #or odd number of reversals left and do zero or one of those
+    simplifiedCount = 0
+    reversed = False
+    for op in operations:
+        if op == "R":
+            expressionTree = reverse(expressionTree)
+            if not reversed:
+                reversed = True
+        elif op == "S"
+            expressionTree = simplify(expressionTree)
+
