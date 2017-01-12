@@ -1,4 +1,8 @@
 def krakenCount(m, n):
+    #edge cases
+    if m==0 or n==0:
+        return 0
+
     #create a board, fill the first rows and columns with 0
     board = [[0 for i in range(m)] for row in range(n)]
     #now fill the first row and first column with 1
