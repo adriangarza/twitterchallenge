@@ -14,4 +14,5 @@ def krakenCount(m, n):
             #add the upper, left, and upper left squares
             board[i][j] = board[i-1][j] + board[i][j-1] + board[i-1][j-1]
 
-    return board
+    #return the bottom right corner
+    return board[n-1][m-1]
