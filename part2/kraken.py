@@ -8,6 +8,10 @@ def krakenCount(m, n):
         board[j][0] = 1
     
     #every square is the sum of its upper, left, and upper left neighbors
-
+    #go by rows and fill in each one
+    for i in range(1, len(board)):
+        for j in range(1, len(board[0])):
+            #add the upper, left, and upper left squares
+            board[i][j] = board[i-1][j] + board[i][j-1] + board[i-1][j-1]
 
     return board
